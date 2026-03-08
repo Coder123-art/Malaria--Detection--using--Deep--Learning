@@ -14,6 +14,7 @@ try:
     with app.app.app_context():
         print("\nTesting dataset stats...")
         sys.stdout.flush()
+        # Line 17 in test_app.py
         result = app.dataset_stats()
         print(f"Result: {result}")
         sys.stdout.flush()

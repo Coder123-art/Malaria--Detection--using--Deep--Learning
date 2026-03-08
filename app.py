@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 import numpy as np
 import base64
 import matplotlib.pyplot as plt
+global training_history, model
 
 # Suppress TensorFlow warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -73,6 +74,7 @@ def home():
     """Home page"""
     model_exists = os.path.exists(MODEL_PATH)
     return render_template('index.html', model_exists=model_exists)
+    
 
 @app.route('/api/dataset-stats')
 def dataset_stats():
