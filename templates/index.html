@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦠 Malaria Detection AI | Deep Learning</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1><i class="fas fa-microscope"></i> Malaria Detection AI</h1>
+            <p>Advanced Deep Learning System for Automated Malaria Diagnosis from Cell Images</p>
+        </header>
+
+        <!-- Stats Banner -->
+        <div class="stats-banner">
+            <div class="stat-item">
+                <div class="stat-number">27K+</div>
+                <div class="stat-label">Cell Images</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">95%+</div>
+                <div class="stat-label">Accuracy</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">< 1s</div>
+                <div class="stat-label">Prediction Time</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">2</div>
+                <div class="stat-label">Categories</div>
+            </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="grid">
+            <!-- Dataset Section -->
+            <div class="card">
+                <span class="card-icon">📊</span>
+                <h2><i class="fas fa-database"></i> Dataset Analysis</h2>
+                <div class="card-content">
+                    <p>Explore the malaria cell image dataset with comprehensive statistics and visualizations.</p>
+                    <div class="stats" id="datasetStats">
+                        <div class="stat-box">
+                            <div class="stat-value">Loading...</div>
+                            <div class="stat-label">Total Images</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">2</div>
+                            <div class="stat-label">Categories</div>
+                        </div>
+                    </div>
+                    <div class="spinner" id="datasetSpinner"></div>
+                    <div class="chart-container" id="datasetChart"></div>
+                    <button class="btn btn-secondary hidden" onclick="visualizeTraining()" id="visualizeBtn" type="button">
+                        📈 View Training Plot
+                    </button>
+                    <button class="btn" onclick="loadDatasetStats()" type="button">Load Dataset Stats</button>
+                </div>
+            </div>
+
+            <!-- Training Section -->
+            <div class="card">
+                <span class="card-icon">🧠</span>
+                <h2><i class="fas fa-brain"></i> AI Training</h2>
+                <div class="card-content">
+                    <p>Train the MobileNetV2 deep learning model on malaria cell images for accurate classification.</p>
+                    <div class="input-group">
+                        <label for="epochs">Training Epochs:</label>
+                        <input type="number" id="epochs" value="3" min="1" max="50" placeholder="Enter number of epochs">
+                    </div>
+                    <div class="status-message" id="trainingStatus"></div>
+                    <div class="spinner" id="trainingSpinner"></div>
+                    <button class="btn" onclick="trainModel()" id="trainBtn" type="button">🚀 Start Training</button>
+                </div>
+            </div>
+
+            <!-- Prediction Section -->
+            <div class="card">
+                <span class="card-icon">🔍</span>
+                <h2><i class="fas fa-search"></i> Malaria Detection</h2>
+                <div class="card-content">
+                    <p>Upload a microscopic cell image to instantly detect malaria infection with AI-powered analysis.</p>
+                    <div class="file-input-container">
+                        <label for="imageFile" class="file-input-label" id="fileLabel">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Choose Cell Image</span>
+                        </label>
+                        <input type="file" id="imageFile" accept=".png,.jpg,.jpeg" onchange="handleImageSelect()">
+                    </div>
+                    <img id="previewImage" class="preview-image hidden" alt="Cell Image Preview">
+                    <div class="status-message" id="predictionStatus"></div>
+                    <div class="spinner" id="predictionSpinner"></div>
+                    <div id="predictionResult"></div>
+                    <button class="btn" onclick="makePrediction()" id="predictBtn" type="button" class="hidden">
+                        🔬 Analyze Image
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- How to Use Section -->
+        <div class="grid">
+            <div class="card full-width">
+                <span class="card-icon">📋</span>
+                <h2><i class="fas fa-route"></i> How to Use</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Load Dataset Statistics</h3>
+                            <p>Click "Load Dataset Stats" to view comprehensive information about the available training data, including image counts and category distribution.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Train the AI Model</h3>
+                            <p>Set the number of training epochs and click "Start Training". The AI will learn to detect malaria from thousands of cell images using advanced deep learning.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>View Training Results</h3>
+                            <p>After training completes, click "View Training Plot" to see how the model's accuracy improved over time with beautiful visualizations.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>Make Predictions</h3>
+                            <p>Upload any cell image and click "Analyze Image" to get instant malaria detection results with confidence scores and visual feedback.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>🦠 Malaria Detection AI | Built with TensorFlow & Flask | Contributing to Global Health</p>
+        </footer>
+    </div>
+
+    <script>
+        // Enhanced JavaScript with better UX
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `status-message ${type}`;
+            element.classList.remove('hidden');
+
+            // Auto-hide success messages after 5 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    element.classList.add('hidden');
+                }, 5000);
+            }
+        }
+
+        function loadDatasetStats() {
+            const spinner = document.getElementById('datasetSpinner');
+            const btn = event.target;
+            spinner.classList.remove('hidden');
+            btn.disabled = true;
+            btn.textContent = 'Loading...';
+
+            fetch('/api/dataset-stats')
+                .then(response => response.json())
+                .then(data => {
+                    spinner.classList.add('hidden');
+                    btn.disabled = false;
+                    btn.textContent = 'Load Dataset Stats';
+
+                    if (data.success) {
+                        const statsHtml = `
+                            <div class="stat-box">
+                                <div class="stat-value">${data.total.toLocaleString()}</div>
+                                <div class="stat-label">Total Images</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value">${data.categories[0]}</div>
+                                <div class="stat-label">${data.counts[0].toLocaleString()}</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value">${data.categories[1]}</div>
+                                <div class="stat-label">${data.counts[1].toLocaleString()}</div>
+                            </div>
+                        `;
+                        document.getElementById('datasetStats').innerHTML = statsHtml;
+                        visualizeDataset();
+                        showMessage('datasetChart', 'Dataset statistics loaded successfully!', 'success');
+                    } else {
+                        showMessage('datasetChart', `Error: ${data.error}`, 'error');
+                    }
+                })
+                .catch(error => {
+                    spinner.classList.add('hidden');
+                    btn.disabled = false;
+                    btn.textContent = 'Load Dataset Stats';
+                    showMessage('datasetChart', `Network Error: ${error}`, 'error');
+                });
+        }
+
+        function visualizeDataset() {
+            fetch('/api/visualize-dataset')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('datasetChart').innerHTML = `<img src="${data.image}" alt="Dataset Distribution Chart">`;
+                    }
+                })
+                .catch(error => console.error('Error loading chart:', error));
+        }
+
+        function trainModel() {
+            const epochs = document.getElementById('epochs').value;
+            const trainBtn = document.getElementById('trainBtn');
+            const spinner = document.getElementById('trainingSpinner');
+
+            if (!epochs || epochs < 1) {
+                showMessage('trainingStatus', 'Please enter a valid number of epochs (1 or more)', 'error');
+                return;
+            }
+
+            trainBtn.disabled = true;
+            trainBtn.textContent = '🚀 Training...';
+            spinner.classList.remove('hidden');
+            showMessage('trainingStatus', `Starting AI training for ${epochs} epochs... This may take several minutes.`, 'info');
+
+            fetch('/api/train-model', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ epochs: parseInt(epochs) })
+            })
+            .then(response => response.json())
+            .then(data => {
+                spinner.classList.add('hidden');
+                trainBtn.disabled = false;
+                trainBtn.textContent = '🚀 Start Training';
+
+                if (data.success) {
+                    showMessage('trainingStatus',
+                        `🎉 Training Complete! Final Accuracy: ${(data.final_accuracy * 100).toFixed(2)}% | Validation: ${(data.final_val_accuracy * 100).toFixed(2)}%`,
+                        'success');
+                    document.getElementById('visualizeBtn').classList.remove('hidden');
+                } else {
+                    showMessage('trainingStatus', `❌ Training Failed: ${data.error}`, 'error');
+                }
+            })
+            .catch(error => {
+                spinner.classList.add('hidden');
+                trainBtn.disabled = false;
+                trainBtn.textContent = '🚀 Start Training';
+                showMessage('trainingStatus', `❌ Network Error: ${error}`, 'error');
+            });
+        }
+
+        function visualizeTraining() {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">×</button>
+                    <h2 class="modal-title">📈 Training Progress Visualization</h2>
+                    <div class="modal-body">Loading training plot...</div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            fetch('/api/training-plot')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        modal.querySelector('.modal-body').innerHTML = `<img src="${data.image}" alt="Training Plot">`;
+                    } else {
+                        modal.querySelector('.modal-body').innerHTML = `<div style="color: #ef4444;">❌ Error: ${data.error}</div>`;
+                    }
+                })
+                .catch(error => {
+                    modal.querySelector('.modal-body').innerHTML = `<div style="color: #ef4444;">❌ Network Error: ${error}</div>`;
+                });
+        }
+
+        function handleImageSelect() {
+            const file = document.getElementById('imageFile').files[0];
+            const label = document.getElementById('fileLabel');
+            const preview = document.getElementById('previewImage');
+            const predictBtn = document.getElementById('predictBtn');
+
+            if (file) {
+                // Update label
+                label.innerHTML = `<i class="fas fa-check-circle"></i> <span>${file.name}</span>`;
+
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                    predictBtn.classList.remove('hidden');
+
+                    // Add fade-in animation
+                    preview.style.opacity = '0';
+                    setTimeout(() => {
+                        preview.style.transition = 'opacity 0.5s ease';
+                        preview.style.opacity = '1';
+                    }, 100);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function makePrediction() {
+            const file = document.getElementById('imageFile').files[0];
+            if (!file) {
+                showMessage('predictionStatus', '❌ Please select an image first', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const spinner = document.getElementById('predictionSpinner');
+            const predictBtn = document.getElementById('predictBtn');
+
+            spinner.classList.remove('hidden');
+            predictBtn.disabled = true;
+            predictBtn.textContent = '🔬 Analyzing...';
+
+            showMessage('predictionStatus', '🧠 AI is analyzing your image...', 'info');
+
+            fetch('/api/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                spinner.classList.add('hidden');
+                predictBtn.disabled = false;
+                predictBtn.textContent = '🔬 Analyze Image';
+
+                if (data.success) {
+                    const isInfected = data.prediction.includes('Infected');
+                    const resultClass = isInfected ? 'infected' : 'healthy';
+                    const icon = isInfected ? '🦠' : '✅';
+                    const statusColor = isInfected ? 'error' : 'success';
+
+                    const resultHtml = `
+                        <div class="prediction-result ${resultClass}">
+                            <div class="result-text">
+                                ${icon} ${data.prediction}
+                            </div>
+                            <p style="margin-bottom: 15px; color: #cbd5e1;">Confidence Score: ${data.confidence}%</p>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: ${data.confidence}%;">${data.confidence}%</div>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('predictionResult').innerHTML = resultHtml;
+
+                    const statusMessage = isInfected
+                        ? `⚠️ Malaria detected with ${data.confidence}% confidence. Please consult a healthcare professional.`
+                        : `✅ No malaria detected. Cell appears healthy with ${data.confidence}% confidence.`;
+
+                    showMessage('predictionStatus', statusMessage, statusColor);
+                } else {
+                    showMessage('predictionStatus', `❌ Analysis Failed: ${data.error}`, 'error');
+                }
+            })
+            .catch(error => {
+                spinner.classList.add('hidden');
+                predictBtn.disabled = false;
+                predictBtn.textContent = '🔬 Analyze Image';
+                showMessage('predictionStatus', `❌ Network Error: ${error}`, 'error');
+            });
+        }
+
+        // Add drag and drop functionality
+        const fileLabel = document.getElementById('fileLabel');
+        const fileInput = document.getElementById('imageFile');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            fileLabel.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            fileLabel.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            fileLabel.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            fileLabel.classList.add('dragover');
+        }
+
+        function unhighlight(e) {
+            fileLabel.classList.remove('dragover');
+        }
+
+        fileLabel.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+
+            if (files.length > 0) {
+                fileInput.files = files;
+                handleImageSelect();
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            // Add loading animation to body
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.5s ease';
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + Enter to start training
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                const trainBtn = document.getElementById('trainBtn');
+                if (!trainBtn.disabled) {
+                    trainModel();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
