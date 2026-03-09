@@ -5,8 +5,13 @@ from flask import Flask, render_template, request, jsonify, send_file
 from werkzeug.utils import secure_filename
 import numpy as np
 import base64
+
+import matplotlib
+matplotlib.use('Agg')
+
 import matplotlib.pyplot as plt
-global training_history, model
+training_history = None
+model = None
 
 # Suppress TensorFlow warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -26,16 +31,16 @@ app.config['UPLOAD_FOLDER'] = 'uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # Global error handler - always return JSON
+import traceback
+from flask import jsonify
+
 @app.errorhandler(Exception)
 def handle_error(error):
-    print(f"Error: {error}")
-    import traceback
     traceback.print_exc()
     return jsonify({
-        'success': False,
-        'error': str(error)
+        "success": False,
+        "error": str(error)
     }), 500
-
 @app.errorhandler(404)
 def not_found(error):
     return jsonify({
@@ -44,9 +49,11 @@ def not_found(error):
     }), 404
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
-BASE_DIR = r"C:\Users\UTKARSH\.cache\kagglehub\datasets\iarunava\cell-images-for-detecting-malaria\versions\1\cell_images"
-CATEGORIES = ['Parasitized', 'Uninfected']
+BASE_DIR = os.path.join(os.getcwd(), "dataset", "cell_images")
 MODEL_PATH = 'malaria_detector.keras'
+
+CATEGORIES = ['Parasitized', 'Uninfected']
+
 
 # Global variables
 training_history = None
@@ -76,50 +83,24 @@ def home():
     return render_template('index.html', model_exists=model_exists)
     
 
-@app.route('/api/dataset-stats')
+@app.route("/api/dataset_stats")
 def dataset_stats():
-    """Get dataset statistics"""
     try:
-        print(f"Dataset path: {BASE_DIR}")
-        print(f"Dataset exists: {os.path.exists(BASE_DIR)}")
-        
-        if not os.path.exists(BASE_DIR):
-            print(f"ERROR: Dataset directory does not exist at {BASE_DIR}")
-            return jsonify({
-                'success': False,
-                'error': f'Dataset directory not found at {BASE_DIR}',
-                'path_checked': BASE_DIR
-            }), 400
-        
-        counts = []
-        for category in CATEGORIES:
-            path = os.path.join(BASE_DIR, category)
-            print(f"Checking category path: {path}")
-            if os.path.exists(path):
-                # Only count image files
-                files = [f for f in os.listdir(path) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
-                print(f"  - {category}: {len(files)} images")
-                counts.append(len(files))
-            else:
-                print(f"  - {category}: path not found")
-                counts.append(0)
-        
-        print(f"Counts: {counts}, Total: {sum(counts)}")
-        
+        dataset_path = "dataset\cell_images"
+
+        infected_path = os.path.join(dataset_path, "Parasitized")
+        uninfected_path = os.path.join(dataset_path, "Uninfected")
+
+        infected_count = len(os.listdir(infected_path))
+        uninfected_count = len(os.listdir(uninfected_path))
+
         return jsonify({
-            'success': True,
-            'categories': CATEGORIES,
-            'counts': counts,
-            'total': sum(counts)
+            "infected": infected_count,
+            "uninfected": uninfected_count
         })
+
     except Exception as e:
-        print(f"Error in dataset_stats: {e}")
-        import traceback
-        traceback.print_exc()
-        return jsonify({
-            'success': False,
-            'error': f'Error reading dataset: {str(e)}'
-        }), 400
+        return jsonify({"error": str(e)})
 
 @app.route('/api/visualize-dataset')
 def visualize_dataset():
@@ -137,11 +118,13 @@ def visualize_dataset():
             else:
                 counts.append(0)
         
-        plt.figure(figsize=(8, 5))
-        sns.barplot(x=['Infected (Parasitized)', 'Healthy (Uninfected)'], y=counts, palette='viridis')
-        plt.title("Malaria Dataset Distribution")
-        plt.ylabel('Number of Images')
-        plt.xlabel('Category')
+        plt.figure(figsize=(8,5))
+        plt.bar(["Infected", "Uninfected"], counts)
+        plt.title("Dataset Distribution")
+
+        chart_path = "static/dataset_chart.png"
+        plt.savefig(chart_path)
+        plt.close()
         
         # Convert plot to base64 image
         img = io.BytesIO()
@@ -151,9 +134,10 @@ def visualize_dataset():
         plt.close()
         
         return jsonify({
-            'success': True,
-            'image': f'data:image/png;base64,{plot_url}'
-        })
+          "infected": infected_count,
+          "uninfected": uninfected_count,
+          "chart": chart_path
+       })
     except Exception as e:
         print(f"Error in visualize_dataset: {e}")
         return jsonify({'success': False, 'error': str(e)}), 400
