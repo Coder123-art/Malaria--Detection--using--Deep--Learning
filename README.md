@@ -39,6 +39,11 @@ This project implements an **automated malaria detection system** using **Convol
 - **Error Handling**: Comprehensive error reporting and logging
 - **Scalable Design**: Easy to extend and modify
 
+### 📊 **Dataset Analysis**
+- **Total Images**:27558
+- **Infected**:13779
+- **Parasitized**:13779
+
 ## 🏗️ Architecture
 
 ### **Model Architecture**
